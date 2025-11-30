@@ -138,11 +138,27 @@ let WebhooksService = class WebhooksService {
             event: 'webhook.test',
             timestamp: new Date().toISOString(),
             data: {
-                message: 'This is a test webhook delivery',
+                message: 'This is a test webhook delivery from Jamail',
+                webhookId: id,
             },
         };
-        await this.trigger('webhook.test', testPayload);
-        return { message: 'Test webhook queued for delivery' };
+        const delivery = await this.prisma.webhookDelivery.create({
+            data: {
+                webhookId: webhook.id,
+                event: 'webhook.test',
+                payload: testPayload,
+                status: 'pending',
+            },
+        });
+        await this.webhookQueue.add('deliver-webhook', {
+            deliveryId: delivery.id,
+            webhookId: webhook.id,
+            url: webhook.url,
+            secret: webhook.secret,
+            event: 'webhook.test',
+            payload: testPayload,
+        });
+        return { message: 'Test webhook queued for delivery', deliveryId: delivery.id };
     }
     generateSignature(payload, secret) {
         return crypto

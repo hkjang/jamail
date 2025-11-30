@@ -79,6 +79,7 @@ export declare class WebhooksService {
     trigger(event: string, payload: any): Promise<void>;
     testWebhook(id: string): Promise<{
         message: string;
+        deliveryId: string;
     }>;
     generateSignature(payload: string, secret: string): string;
     private generateSecret;

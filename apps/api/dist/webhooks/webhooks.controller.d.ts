@@ -77,5 +77,6 @@ export declare class WebhooksController {
     }[]>;
     testWebhook(id: string): Promise<{
         message: string;
+        deliveryId: string;
     }>;
 }
