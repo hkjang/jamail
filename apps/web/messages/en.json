@@ -1,0 +1,27 @@
+{
+    "Templates": {
+        "title": "Templates",
+        "new": "New Template",
+        "noDescription": "No description",
+        "version": "v{version}",
+        "updated": "Updated {date}"
+    },
+    "Editor": {
+        "save": "Save Version",
+        "subject": "Email Subject",
+        "htmlCode": "HTML Code",
+        "preview": "Preview",
+        "testVariables": "Test Variables",
+        "updatePreview": "Update Preview",
+        "testSend": "Test Send",
+        "recipient": "Recipient",
+        "send": "Send Test Email",
+        "sending": "Sending...",
+        "success": "Email queued!",
+        "error": "Failed to send"
+    },
+    "Nav": {
+        "templates": "Templates",
+        "settings": "Settings"
+    }
+}

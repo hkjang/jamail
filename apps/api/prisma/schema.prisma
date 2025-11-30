@@ -1,0 +1,187 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum Role {
+  ADMIN
+  OPERATOR
+  VIEWER
+}
+
+enum TemplateCategory {
+  NOTIFICATION
+  MARKETING
+  SECURITY
+  OTHER
+}
+
+enum SendStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(VIEWER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Template {
+  id               String            @id @default(uuid())
+  name             String
+  description      String?
+  category         TemplateCategory  @default(OTHER)
+  currentVersionId String?
+  defaultLanguage  String            @default("en")
+  versions         TemplateVersion[]
+  sendLogs         SendLog[]
+  abTestResults    ABTestResult[]
+  translations     TemplateTranslation[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model TemplateVersion {
+  id              String   @id @default(uuid())
+  templateId      String
+  template        Template @relation(fields: [templateId], references: [id])
+  versionNumber   Int
+  subject         String
+  htmlContent     String
+  textContent     String?
+  isVariant       Boolean  @default(false)
+  variantName     String?  // e.g., "A", "B", "Control"
+  variantGroup    String?  // Group ID to link variants together
+  trafficSplit    Int?     @default(50) // Percentage of traffic (0-100)
+  variablesSchema Json?    // JSON schema for variables
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdBy       String?  // User ID
+  abTestResults   ABTestResult[]
+  
+  @@unique([templateId, versionNumber])
+}
+
+model SendLog {
+  id           String     @id @default(uuid())
+  templateId   String
+  template     Template   @relation(fields: [templateId], references: [id])
+  recipient    String
+  status       SendStatus @default(PENDING)
+  sentAt       DateTime?
+  subject      String?
+  smtpResponse String?
+  errorReason  String?
+  retryCount   Int        @default(0)
+  scheduledAt  DateTime?
+  createdAt    DateTime   @default(now())
+  metadata     Json?
+}
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  keyHash   String   @unique
+  name      String
+  scopes    String[] // e.g., ["send", "read_templates"]
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  lastUsedAt DateTime?
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?  // Nullable if action is done by system or API Key
+  apiKeyId  String?
+  action    String   // e.g., "CREATE_TEMPLATE", "DELETE_TEMPLATE"
+  resource  String   // e.g., "Template", "User"
+  resourceId String?
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
+
+model SmtpConfig {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  host        String
+  port        Int
+  username    String
+  password    String   // Should be encrypted in production
+  secure      Boolean  @default(true)
+  isDefault   Boolean  @default(false)
+  categories  String[] // Array of TemplateCategory values
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ABTestResult {
+  id              String          @id @default(uuid())
+  templateId      String
+  template        Template        @relation(fields: [templateId], references: [id])
+  versionId       String
+  version         TemplateVersion @relation(fields: [versionId], references: [id])
+  variantName     String
+  totalSent       Int             @default(0)
+  opens           Int             @default(0)
+  clicks          Int             @default(0)
+  conversions     Int             @default(0)
+  openRate        Float           @default(0)
+  clickRate       Float           @default(0)
+  conversionRate  Float           @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model TemplateTranslation {
+  id          String   @id @default(uuid())
+  templateId  String
+  template    Template @relation(fields: [templateId], references: [id])
+  language    String   // Language code (e.g., 'en', 'ko', 'ja', 'zh')
+  subject     String
+  htmlContent String
+  textContent String?
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([templateId, language])
+}
+
+model Webhook {
+  id         String            @id @default(uuid())
+  url        String
+  events     String[]          // Array of event types
+  secret     String            // For HMAC signature verification
+  isActive   Boolean           @default(true)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  deliveries WebhookDelivery[]
+}
+
+model WebhookDelivery {
+  id           String    @id @default(uuid())
+  webhookId    String
+  webhook      Webhook   @relation(fields: [webhookId], references: [id])
+  event        String    // Event type
+  payload      Json      // Event data
+  status       String    // 'pending', 'success', 'failed'
+  responseCode Int?
+  responseBody String?
+  attempts     Int       @default(0)
+  nextRetryAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}

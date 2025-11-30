@@ -1,0 +1,48 @@
+-- AlterTable
+ALTER TABLE "SendLog" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "retryCount" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "scheduledAt" TIMESTAMP(3),
+ALTER COLUMN "templateId" SET NOT NULL,
+ALTER COLUMN "status" SET DEFAULT 'PENDING',
+ALTER COLUMN "sentAt" DROP NOT NULL,
+ALTER COLUMN "sentAt" DROP DEFAULT,
+ALTER COLUMN "subject" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "Template" ADD COLUMN     "abTestResults" TEXT[];
+
+-- AlterTable
+ALTER TABLE "TemplateVersion" 
+ADD COLUMN "isVariant" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN "variantName" TEXT,
+ADD COLUMN "variantGroup" TEXT,
+ADD COLUMN "trafficSplit" INTEGER DEFAULT 50,
+ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- CreateTable
+CREATE TABLE "ABTestResult" (
+    "id" TEXT NOT NULL,
+    "templateId" TEXT NOT NULL,
+    "versionId" TEXT NOT NULL,
+    "variantName" TEXT NOT NULL,
+    "totalSent" INTEGER NOT NULL DEFAULT 0,
+    "opens" INTEGER NOT NULL DEFAULT 0,
+    "clicks" INTEGER NOT NULL DEFAULT 0,
+    "conversions" INTEGER NOT NULL DEFAULT 0,
+    "openRate" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "clickRate" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "conversionRate" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ABTestResult_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "SendLog" ADD CONSTRAINT "SendLog_templateId_fkey" FOREIGN KEY ("templateId") REFERENCES "Template"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ABTestResult" ADD CONSTRAINT "ABTestResult_templateId_fkey" FOREIGN KEY ("templateId") REFERENCES "Template"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ABTestResult" ADD CONSTRAINT "ABTestResult_versionId_fkey" FOREIGN KEY ("versionId") REFERENCES "TemplateVersion"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -1,0 +1,27 @@
+{
+    "Templates": {
+        "title": "템플릿",
+        "new": "새 템플릿",
+        "noDescription": "설명 없음",
+        "version": "v{version}",
+        "updated": "{date} 업데이트됨"
+    },
+    "Editor": {
+        "save": "버전 저장",
+        "subject": "이메일 제목",
+        "htmlCode": "HTML 코드",
+        "preview": "미리보기",
+        "testVariables": "변수 테스트",
+        "updatePreview": "미리보기 업데이트",
+        "testSend": "테스트 발송",
+        "recipient": "수신자",
+        "send": "테스트 이메일 보내기",
+        "sending": "전송 중...",
+        "success": "이메일이 대기열에 추가되었습니다!",
+        "error": "전송 실패"
+    },
+    "Nav": {
+        "templates": "템플릿",
+        "settings": "설정"
+    }
+}
