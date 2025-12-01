@@ -15,4 +15,7 @@ export class CreateTemplateVersionDto {
 
     @IsOptional()
     variablesSchema?: any;
+
+    @IsOptional()
+    schema?: any;
 }

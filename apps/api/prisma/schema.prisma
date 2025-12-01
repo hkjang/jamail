@@ -44,6 +44,7 @@ model Template {
   id               String            @id @default(uuid())
   name             String
   description      String?
+  schema           Json?             // JSON schema for the drag & drop builder
   category         TemplateCategory  @default(OTHER)
   currentVersionId String?
   defaultLanguage  String            @default("en")
@@ -51,6 +52,7 @@ model Template {
   sendLogs         SendLog[]
   abTestResults    ABTestResult[]
   translations     TemplateTranslation[]
+  eventLogs        TemplateEventLog[]
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 }
@@ -61,6 +63,7 @@ model TemplateVersion {
   template        Template @relation(fields: [templateId], references: [id])
   versionNumber   Int
   subject         String
+  schema          Json?    // JSON schema for this version
   htmlContent     String
   textContent     String?
   isVariant       Boolean  @default(false)
@@ -188,4 +191,22 @@ model WebhookDelivery {
   nextRetryAt  DateTime?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+}
+
+model Asset {
+  id        String   @id @default(uuid())
+  url       String
+  filename  String
+  size      Int
+  mimeType  String?
+  createdAt DateTime @default(now())
+}
+
+model TemplateEventLog {
+  id         String   @id @default(uuid())
+  templateId String
+  template   Template @relation(fields: [templateId], references: [id])
+  action     String   // e.g., "UPDATE_SCHEMA", "PUBLISH_VERSION"
+  detail     String?
+  createdAt  DateTime @default(now())
 }

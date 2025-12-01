@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTemplateDto, UpdateTemplateDto } from './dto/template.dto';
 import { CreateTemplateVersionDto } from './dto/version.dto';
+import { HtmlRenderService, TemplateSchema } from './html-render.service';
 
 @Injectable()
 export class TemplatesService {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        private htmlRenderService: HtmlRenderService,
+    ) { }
 
     async create(createTemplateDto: CreateTemplateDto) {
         return this.prisma.template.create({
@@ -63,6 +67,7 @@ export class TemplatesService {
                 templateId,
                 versionNumber: newVersionNumber,
                 ...createVersionDto,
+                schema: createVersionDto.schema,
             },
         });
 
@@ -171,5 +176,9 @@ export class TemplatesService {
             totalFailed,
             recentLogs,
         };
+    }
+
+    async renderHtml(schema: TemplateSchema): Promise<string> {
+        return this.htmlRenderService.renderFromSchema(schema);
     }
 }

@@ -13,6 +13,9 @@ export class CreateTemplateDto {
     @IsOptional()
     @IsEnum(TemplateCategory)
     category?: TemplateCategory;
+
+    @IsOptional()
+    schema?: any;
 }
 
 export class UpdateTemplateDto {
@@ -27,4 +30,7 @@ export class UpdateTemplateDto {
     @IsOptional()
     @IsEnum(TemplateCategory)
     category?: TemplateCategory;
+
+    @IsOptional()
+    schema?: any;
 }

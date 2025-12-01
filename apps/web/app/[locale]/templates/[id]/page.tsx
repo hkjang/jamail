@@ -10,7 +10,7 @@ import VersionHistory from '@/components/VersionHistory';
 
 export default function TemplateDetailPage() {
     const t = useTranslations('Editor');
-    const { id } = useParams();
+    const { id, locale } = useParams();
     const [template, setTemplate] = useState<any>(null);
     const [previewHtml, setPreviewHtml] = useState<string>('');
     const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
@@ -96,6 +96,12 @@ export default function TemplateDetailPage() {
                     <p className="text-sm text-gray-500">v{template.versions?.[0]?.versionNumber || 0}</p>
                 </div>
                 <div className="flex gap-2">
+                    <a
+                        href={`/${locale}/templates/${id}/builder`}
+                        className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                    >
+                        🎨 Builder
+                    </a>
                     <button onClick={handleSubmit(onSave)} className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800">
                         <Save size={18} /> {t('save')}
                     </button>

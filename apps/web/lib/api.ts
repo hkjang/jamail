@@ -107,6 +107,11 @@ export const createTemplate = async (data: any) => {
     return res;
 };
 
+export const updateTemplate = async (id: string, data: any) => {
+    const { data: res } = await api.patch(`/templates/${id}`, data);
+    return res;
+};
+
 export const createVersion = async (templateId: string, data: any) => {
     const { data: res } = await api.post(`/templates/${templateId}/versions`, data);
     return res;
