@@ -92,8 +92,9 @@ export const deleteApiKey = async (id: string) => {
 };
 
 // Template APIs
-export const fetchTemplates = async () => {
-    const { data } = await api.get('/templates');
+export const fetchTemplates = async (search?: string) => {
+    const params = search ? { search } : {};
+    const { data } = await api.get('/templates', { params });
     return data;
 };
 

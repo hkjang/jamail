@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { TemplatesService } from './templates.service';
 import { CreateTemplateDto, UpdateTemplateDto } from './dto/template.dto';
 import { CreateTemplateVersionDto } from './dto/version.dto';
@@ -31,7 +31,10 @@ export class TemplatesController {
     @Get()
     @Roles(Role.ADMIN, Role.OPERATOR, Role.VIEWER)
     @Scopes('read_templates')
-    findAll() {
+    findAll(@Query('search') search?: string) {
+        if (search) {
+            return this.templatesService.search(search);
+        }
         return this.templatesService.findAll();
     }
 

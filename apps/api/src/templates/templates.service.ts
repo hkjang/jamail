@@ -28,6 +28,37 @@ export class TemplatesService {
         });
     }
 
+    async search(query: string) {
+        if (!query || query.trim() === '') {
+            return this.findAll();
+        }
+
+        return this.prisma.template.findMany({
+            where: {
+                OR: [
+                    {
+                        name: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        description: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                ],
+            },
+            include: {
+                versions: {
+                    orderBy: { versionNumber: 'desc' },
+                    take: 1,
+                },
+            },
+        });
+    }
+
     async findOne(id: string) {
         return this.prisma.template.findUnique({
             where: { id },
