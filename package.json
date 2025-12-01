@@ -12,6 +12,7 @@
     "test": "npm run test --workspaces --if-present"
   },
   "devDependencies": {
+    "prisma": "^5.22.0",
     "turbo": "latest"
   }
 }

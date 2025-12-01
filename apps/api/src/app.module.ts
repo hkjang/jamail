@@ -12,6 +12,7 @@ import { ABTestingModule } from './ab-testing/ab-testing.module';
 import { TranslationsModule } from './translations/translations.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
 import { AssetsModule } from './assets/assets.module';
+import { NoticesModule } from './notices/notices.module';
 
 @Module({
   imports: [
@@ -25,7 +26,9 @@ import { AssetsModule } from './assets/assets.module';
     ABTestingModule,
     TranslationsModule,
     WebhooksModule,
+    WebhooksModule,
     AssetsModule,
+    NoticesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

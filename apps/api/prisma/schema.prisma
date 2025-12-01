@@ -39,6 +39,7 @@ model User {
   updatedAt DateTime @updatedAt
   lastLoginAt DateTime?
   templates   Template[]
+  notices     Notice[]
 }
 
 enum TemplateType {
@@ -219,4 +220,14 @@ model TemplateEventLog {
   action     String   // e.g., "UPDATE_SCHEMA", "PUBLISH_VERSION"
   detail     String?
   createdAt  DateTime @default(now())
+}
+
+model Notice {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

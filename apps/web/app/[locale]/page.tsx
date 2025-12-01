@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import NoticeList from '@/components/dashboard/NoticeList';
 
 export default async function HomePage({
   params
@@ -26,6 +27,10 @@ export default async function HomePage({
             {locale === 'ko' ? '템플릿 보기' : 'View Templates'}
           </Link>
         </div>
+      </div>
+
+      <div className="mt-16">
+        <NoticeList />
       </div>
     </div>
   );
