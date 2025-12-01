@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { TemplateCategory } from '@prisma/client';
+import { TemplateCategory, TemplateType } from '@prisma/client';
 
 export class CreateTemplateDto {
     @IsNotEmpty()
@@ -13,6 +13,10 @@ export class CreateTemplateDto {
     @IsOptional()
     @IsEnum(TemplateCategory)
     category?: TemplateCategory;
+
+    @IsOptional()
+    @IsEnum(TemplateType)
+    type?: TemplateType;
 
     @IsOptional()
     schema?: any;
@@ -30,6 +34,10 @@ export class UpdateTemplateDto {
     @IsOptional()
     @IsEnum(TemplateCategory)
     category?: TemplateCategory;
+
+    @IsOptional()
+    @IsEnum(TemplateType)
+    type?: TemplateType;
 
     @IsOptional()
     schema?: any;

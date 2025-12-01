@@ -118,8 +118,21 @@ export class TemplatesService {
             await this.validateVariables(version.variablesSchema, variables);
         }
 
-        // 3. Render HTML
-        const html = await this.preview(version.htmlContent, variables);
+        // 3. Render HTML based on template type
+        let html: string;
+
+        if (version.type === 'BUILDER') {
+            // Render from schema for builder templates
+            if (!version.schema) {
+                throw new Error('Builder template missing schema');
+            }
+            const renderedHtml = await this.htmlRenderService.renderFromSchema(version.schema as unknown as TemplateSchema);
+            html = await this.preview(renderedHtml, variables);
+        } else {
+            // Use htmlContent directly for basic templates
+            html = await this.preview(version.htmlContent, variables);
+        }
+
         const subject = await this.preview(version.subject, variables);
 
         // 4. Create Log (PENDING)

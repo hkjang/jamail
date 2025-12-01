@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString, IsOptional, IsJSON } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsBoolean, IsEnum } from 'class-validator';
+import { TemplateType } from '@prisma/client';
 
 export class CreateTemplateVersionDto {
     @IsNotEmpty()
@@ -14,7 +15,8 @@ export class CreateTemplateVersionDto {
     textContent?: string;
 
     @IsOptional()
-    variablesSchema?: any;
+    @IsEnum(TemplateType)
+    type?: TemplateType;
 
     @IsOptional()
     schema?: any;

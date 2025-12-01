@@ -92,7 +92,17 @@ export default function TemplateDetailPage() {
         <div className="max-w-6xl mx-auto p-8 h-[calc(100vh-64px)] flex flex-col">
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h1 className="text-2xl font-bold">{template.name}</h1>
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-2xl font-bold">{template.name}</h1>
+                        {template.type && (
+                            <span className={`px-3 py-1 text-sm font-medium rounded-full ${template.type === 'BUILDER'
+                                    ? 'bg-blue-100 text-blue-700'
+                                    : 'bg-gray-100 text-gray-700'
+                                }`}>
+                                {template.type === 'BUILDER' ? '🎨 Builder' : '📝 Basic'}
+                            </span>
+                        )}
+                    </div>
                     <p className="text-sm text-gray-500">v{template.versions?.[0]?.versionNumber || 0}</p>
                 </div>
                 <div className="flex gap-2">

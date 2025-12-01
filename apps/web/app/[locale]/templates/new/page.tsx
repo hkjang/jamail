@@ -20,6 +20,7 @@ export default function NewTemplatePage() {
                 name: data.name,
                 description: data.description,
                 category: data.category || 'OTHER',
+                type: data.type || 'BUILDER',
             });
 
             // Create first version
@@ -84,6 +85,47 @@ export default function NewTemplatePage() {
                         <option value="SECURITY">{locale === 'ko' ? '보안' : 'Security'}</option>
                         <option value="OTHER">{locale === 'ko' ? '기타' : 'Other'}</option>
                     </select>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {locale === 'ko' ? '템플릿 타입' : 'Template Type'}
+                    </label>
+                    <div className="grid grid-cols-2 gap-4">
+                        <label className="relative flex items-center p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
+                            <input
+                                {...register('type')}
+                                type="radio"
+                                value="BUILDER"
+                                defaultChecked
+                                className="w-4 h-4 text-blue-600"
+                            />
+                            <div className="ml-3">
+                                <div className="font-medium text-gray-900">
+                                    🎨 {locale === 'ko' ? '빌더' : 'Builder'}
+                                </div>
+                                <div className="text-sm text-gray-500">
+                                    {locale === 'ko' ? '드래그앤드롭 에디터' : 'Drag & Drop Editor'}
+                                </div>
+                            </div>
+                        </label>
+                        <label className="relative flex items-center p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
+                            <input
+                                {...register('type')}
+                                type="radio"
+                                value="BASIC"
+                                className="w-4 h-4 text-blue-600"
+                            />
+                            <div className="ml-3">
+                                <div className="font-medium text-gray-900">
+                                    📝 {locale === 'ko' ? '기본' : 'Basic'}
+                                </div>
+                                <div className="text-sm text-gray-500">
+                                    {locale === 'ko' ? 'HTML 코드 직접 작성' : 'Write HTML Code'}
+                                </div>
+                            </div>
+                        </label>
+                    </div>
                 </div>
 
                 <div>

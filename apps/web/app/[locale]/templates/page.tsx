@@ -34,9 +34,19 @@ export default function TemplatesPage() {
                                 <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
                                     <Mail size={24} />
                                 </div>
-                                <span className="text-xs font-medium px-2 py-1 bg-gray-100 rounded-full text-gray-600">
-                                    {tItem.category}
-                                </span>
+                                <div className="flex gap-2">
+                                    {tItem.type && (
+                                        <span className={`text-xs font-medium px-2 py-1 rounded-full ${tItem.type === 'BUILDER'
+                                                ? 'bg-blue-100 text-blue-700'
+                                                : 'bg-gray-100 text-gray-700'
+                                            }`}>
+                                            {tItem.type === 'BUILDER' ? '🎨 Builder' : '📝 Basic'}
+                                        </span>
+                                    )}
+                                    <span className="text-xs font-medium px-2 py-1 bg-gray-100 rounded-full text-gray-600">
+                                        {tItem.category}
+                                    </span>
+                                </div>
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600">
                                 {tItem.name}

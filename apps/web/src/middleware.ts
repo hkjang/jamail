@@ -5,7 +5,10 @@ export default createMiddleware({
     locales: ['en', 'ko'],
 
     // Used when no locale matches
-    defaultLocale: 'ko'
+    defaultLocale: 'ko',
+
+    // Automatically detect locale from Accept-Language header
+    localeDetection: true
 });
 
 export const config = {
