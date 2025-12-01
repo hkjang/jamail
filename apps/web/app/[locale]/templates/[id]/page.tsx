@@ -75,14 +75,40 @@ export default function TemplateDetailPage() {
     const onSend = async (data: any) => {
         try {
             const vars = JSON.parse(data.variables || '{}');
+
+            // Show loading state
+            const sendButton = document.querySelector('#send-test-btn');
+            if (sendButton) {
+                sendButton.textContent = locale === 'ko' ? '발송 중...' : 'Sending...';
+                (sendButton as HTMLButtonElement).disabled = true;
+            }
+
             await sendEmail(id as string, {
                 recipient: data.recipient,
                 variables: vars,
             });
-            alert('Email sent successfully!');
-        } catch (e) {
-            alert('Failed to send email');
+
+            // Success notification
+            const message = locale === 'ko'
+                ? `✅ ${data.recipient}로 이메일이 성공적으로 발송되었습니다!`
+                : `✅ Email sent successfully to ${data.recipient}!`;
+            alert(message);
+
+            // Clear recipient field after successful send
+            setValue('recipient', '');
+        } catch (e: any) {
+            const errorMsg = locale === 'ko'
+                ? `❌ 이메일 발송 실패: ${e.response?.data?.message || e.message || '알 수 없는 오류'}`
+                : `❌ Failed to send email: ${e.response?.data?.message || e.message || 'Unknown error'}`;
+            alert(errorMsg);
             console.error(e);
+        } finally {
+            // Reset button state
+            const sendButton = document.querySelector('#send-test-btn');
+            if (sendButton) {
+                sendButton.textContent = t('send');
+                (sendButton as HTMLButtonElement).disabled = false;
+            }
         }
     };
 
@@ -96,8 +122,8 @@ export default function TemplateDetailPage() {
                         <h1 className="text-2xl font-bold">{template.name}</h1>
                         {template.type && (
                             <span className={`px-3 py-1 text-sm font-medium rounded-full ${template.type === 'BUILDER'
-                                    ? 'bg-blue-100 text-blue-700'
-                                    : 'bg-gray-100 text-gray-700'
+                                ? 'bg-blue-100 text-blue-700'
+                                : 'bg-gray-100 text-gray-700'
                                 }`}>
                                 {template.type === 'BUILDER' ? '🎨 Builder' : '📝 Basic'}
                             </span>
@@ -177,18 +203,37 @@ export default function TemplateDetailPage() {
                         </button>
                     </div>
 
-                    <div className="bg-white border rounded-xl p-4">
-                        <h3 className="font-semibold mb-3 flex items-center gap-2">
-                            <Send size={18} /> {t('testSend')}
+                    <div className="bg-white border rounded-xl p-4 shadow-sm">
+                        <h3 className="font-semibold mb-3 flex items-center gap-2 text-gray-900">
+                            <Send size={18} className="text-green-600" /> {t('testSend')}
                         </h3>
-                        <input
-                            {...register('recipient')}
-                            placeholder="recipient@example.com"
-                            className="w-full p-2 border rounded-lg mb-3 text-sm"
-                        />
-                        <button onClick={handleSubmit(onSend)} className="w-full py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium">
-                            {t('send')}
-                        </button>
+                        <div className="space-y-3">
+                            <div>
+                                <label className="block text-xs font-medium text-gray-600 mb-1">
+                                    {locale === 'ko' ? '수신 이메일' : 'Recipient Email'}
+                                </label>
+                                <input
+                                    {...register('recipient')}
+                                    type="email"
+                                    placeholder="recipient@example.com"
+                                    className="w-full p-2 border rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    required
+                                />
+                            </div>
+                            <button
+                                id="send-test-btn"
+                                onClick={handleSubmit(onSend)}
+                                className="w-full py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 active:bg-green-800 text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                            >
+                                <Send size={16} />
+                                {t('send')}
+                            </button>
+                            <p className="text-xs text-gray-500">
+                                {locale === 'ko'
+                                    ? '💡 위의 변수를 사용하여 테스트 이메일이 발송됩니다.'
+                                    : '💡 Test email will be sent using the variables above.'}
+                            </p>
+                        </div>
                     </div>
 
                     {/* Version History */}
