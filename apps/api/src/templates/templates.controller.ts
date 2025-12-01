@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Req } from '@nestjs/common';
 import { TemplatesService } from './templates.service';
 import { CreateTemplateDto, UpdateTemplateDto } from './dto/template.dto';
 import { CreateTemplateVersionDto } from './dto/version.dto';
@@ -24,8 +24,8 @@ export class TemplatesController {
     @Post()
     @Roles(Role.ADMIN, Role.OPERATOR)
     @Scopes('write_templates')
-    create(@Body() createTemplateDto: CreateTemplateDto) {
-        return this.templatesService.create(createTemplateDto);
+    create(@Body() createTemplateDto: CreateTemplateDto, @Req() req) {
+        return this.templatesService.create(createTemplateDto, req.user.id);
     }
 
     @Get()

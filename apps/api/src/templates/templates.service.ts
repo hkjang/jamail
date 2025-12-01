@@ -11,9 +11,12 @@ export class TemplatesService {
         private htmlRenderService: HtmlRenderService,
     ) { }
 
-    async create(createTemplateDto: CreateTemplateDto) {
+    async create(createTemplateDto: CreateTemplateDto, creatorId?: string) {
         return this.prisma.template.create({
-            data: createTemplateDto,
+            data: {
+                ...createTemplateDto,
+                creatorId,
+            },
         });
     }
 
@@ -23,6 +26,9 @@ export class TemplatesService {
                 versions: {
                     orderBy: { versionNumber: 'desc' },
                     take: 1,
+                },
+                creator: {
+                    select: { email: true, id: true },
                 },
             },
         });
@@ -55,6 +61,9 @@ export class TemplatesService {
                     orderBy: { versionNumber: 'desc' },
                     take: 1,
                 },
+                creator: {
+                    select: { email: true, id: true },
+                },
             },
         });
     }
@@ -65,6 +74,9 @@ export class TemplatesService {
             include: {
                 versions: {
                     orderBy: { versionNumber: 'desc' },
+                },
+                creator: {
+                    select: { email: true, id: true },
                 },
             },
         });
@@ -213,12 +225,30 @@ export class TemplatesService {
             orderBy: { sentAt: 'desc' },
         });
 
+        // User stats
+        const templatesByUser = await this.prisma.template.groupBy({
+            by: ['creatorId'],
+            _count: {
+                id: true,
+            },
+        });
+
+        // Enrich with user emails
+        const userStats = await Promise.all(templatesByUser.map(async (stat) => {
+            if (!stat.creatorId) return { email: 'Unknown', count: stat._count.id };
+            const user = await this.prisma.user.findUnique({ where: { id: stat.creatorId } });
+            return {
+                email: user?.email || 'Unknown',
+                count: stat._count.id,
+            };
+        }));
 
         return {
             totalTemplates,
             totalSent,
             totalFailed,
             recentLogs,
+            userStats,
         };
     }
 

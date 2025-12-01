@@ -38,6 +38,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   lastLoginAt DateTime?
+  templates   Template[]
 }
 
 enum TemplateType {
@@ -59,6 +60,8 @@ model Template {
   abTestResults    ABTestResult[]
   translations     TemplateTranslation[]
   eventLogs        TemplateEventLog[]
+  creatorId        String?
+  creator          User?             @relation(fields: [creatorId], references: [id])
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 }

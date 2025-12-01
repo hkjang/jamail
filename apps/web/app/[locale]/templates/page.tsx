@@ -110,6 +110,11 @@ export default function TemplatesPage() {
                             </p>
                             <div className="mt-4 pt-4 border-t flex justify-between text-xs text-gray-400">
                                 <span>{t('version', { version: tItem.versions?.[0]?.versionNumber || 0 })}</span>
+                                {tItem.creator && (
+                                    <span className="flex items-center gap-1" title={tItem.creator.email}>
+                                        👤 {tItem.creator.email.split('@')[0]}
+                                    </span>
+                                )}
                                 <span>{new Date(tItem.updatedAt).toLocaleDateString()}</span>
                             </div>
                         </div>

@@ -70,7 +70,7 @@ export default function DashboardPage() {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{log.subject}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${log.status === 'SENT' ? 'bg-green-100 text-green-800' :
-                                                log.status === 'FAILED' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
+                                            log.status === 'FAILED' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
                                             }`}>
                                             {log.status}
                                         </span>
@@ -84,6 +84,33 @@ export default function DashboardPage() {
                     </table>
                 </div>
             </div>
+
+            {/* User Stats Section */}
+            {stats.userStats && (
+                <div className="bg-white rounded-xl shadow-sm border p-6 mt-8">
+                    <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <Activity size={20} /> User Statistics
+                    </h2>
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Templates Managed</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {stats.userStats.map((userStat: any, index: number) => (
+                                    <tr key={index}>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{userStat.email}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{userStat.count}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
