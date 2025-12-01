@@ -62,12 +62,14 @@ services:
       - "3000:3000"
     depends_on:
       - api
-    networks:
-      - jamail-network
 
 networks:
   jamail-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.34.0.0/16
+          gateway: 172.34.0.1
 
 volumes:
   postgres_data:
