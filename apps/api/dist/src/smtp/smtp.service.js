@@ -130,15 +130,18 @@ let SmtpService = class SmtpService {
             return { success: false, message: 'SMTP configuration not found' };
         }
         try {
-            const transporter = nodemailer.createTransport({
+            const transportConfig = {
                 host: config.host,
                 port: config.port,
                 secure: config.secure,
-                auth: {
+            };
+            if (config.username) {
+                transportConfig.auth = {
                     user: config.username,
                     pass: config.password,
-                },
-            });
+                };
+            }
+            const transporter = nodemailer.createTransport(transportConfig);
             await transporter.verify();
             return { success: true, message: 'Connection successful' };
         }

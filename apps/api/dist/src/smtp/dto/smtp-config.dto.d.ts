@@ -2,8 +2,8 @@ export declare class CreateSmtpConfigDto {
     name: string;
     host: string;
     port: number;
-    username: string;
-    password: string;
+    username?: string;
+    password?: string;
     secure?: boolean;
     isDefault?: boolean;
     categories?: string[];

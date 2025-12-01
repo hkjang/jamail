@@ -110,15 +110,20 @@ export class SmtpService {
         }
 
         try {
-            const transporter = nodemailer.createTransport({
+            const transportConfig: any = {
                 host: config.host,
                 port: config.port,
                 secure: config.secure,
-                auth: {
+            };
+
+            if (config.username) {
+                transportConfig.auth = {
                     user: config.username,
                     pass: config.password,
-                },
-            });
+                };
+            }
+
+            const transporter = nodemailer.createTransport(transportConfig);
 
             await transporter.verify();
             return { success: true, message: 'Connection successful' };

@@ -120,18 +120,18 @@ export default function SmtpSettings() {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">사용자명 *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">사용자명</label>
                         <input
-                            {...register('username', { required: true })}
+                            {...register('username')}
                             type="text"
                             placeholder="your-email@gmail.com"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">비밀번호 *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
                         <input
-                            {...register('password', { required: !editingSmtp })}
+                            {...register('password')}
                             type="password"
                             placeholder={editingSmtp ? "변경하려면 입력" : ""}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"

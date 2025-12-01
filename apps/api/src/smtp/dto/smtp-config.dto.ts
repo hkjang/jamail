@@ -13,13 +13,13 @@ export class CreateSmtpConfigDto {
     @IsInt()
     port: number;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    username: string;
+    username?: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    password: string;
+    password?: string;
 
     @IsOptional()
     @IsBoolean()

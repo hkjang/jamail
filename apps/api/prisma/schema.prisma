@@ -122,8 +122,8 @@ model SmtpConfig {
   name        String   @unique
   host        String
   port        Int
-  username    String
-  password    String   // Should be encrypted in production
+  username    String?
+  password    String?   // Should be encrypted in production
   secure      Boolean  @default(true)
   isDefault   Boolean  @default(false)
   categories  String[] // Array of TemplateCategory values
