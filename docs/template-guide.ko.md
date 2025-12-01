@@ -125,13 +125,22 @@
 ### API 엔드포인트 (API Endpoint)
 **POST** `/api/templates/:id/send`
 
-### 요청 본문 (Request Body)
+### API 파라미터 (API Parameters) - 두 유형 동일
+
+빌더 템플릿과 기본 템플릿 간에 **API 파라미터의 차이는 없습니다**. 백엔드가 렌더링 로직을 추상화하므로, 발송을 위한 인터페이스는 통합되어 있습니다.
+
+| 파라미터 | 타입 | 필수 여부 | 설명 |
+| :--- | :--- | :--- | :--- |
+| `recipient` | `string` | 예 (Yes) | 수신자의 이메일 주소입니다. |
+| `variables` | `object` | 아니오 (No) | 템플릿에 사용된 동적 플레이스홀더(예: `{{name}}`)에 들어갈 값을 담은 JSON 객체입니다. |
+
 ```json
+// 예시 요청 본문 (빌더 및 기본 템플릿 모두 동일)
 {
   "recipient": "user@example.com",
   "variables": {
     "name": "홍길동",
-    "orderId": "12345"
+    "verificationCode": "123456"
   }
 }
 ```

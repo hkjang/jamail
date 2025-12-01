@@ -125,13 +125,22 @@ The API for sending emails is **identical** for both template types, but the int
 ### API Endpoint
 **POST** `/api/templates/:id/send`
 
-### Request Body
+### API Parameters (Identical for Both Types)
+
+There is **NO difference** in the API parameters between Builder Templates and Basic Templates. The backend abstracts the rendering logic, so the interface for sending is unified.
+
+| Parameter | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `recipient` | `string` | Yes | The email address of the recipient. |
+| `variables` | `object` | No | A JSON object containing values for any dynamic placeholders (e.g., `{{name}}`) used in the template. |
+
 ```json
+// Example Request Body (Same for Builder & Basic)
 {
   "recipient": "user@example.com",
   "variables": {
     "name": "John Doe",
-    "orderId": "12345"
+    "verificationCode": "123456"
   }
 }
 ```
