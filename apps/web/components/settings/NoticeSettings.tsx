@@ -42,7 +42,7 @@ export default function NoticeSettings() {
 
         setIsLoading(true);
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('access_token');
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
             const url = currentNotice.id
                 ? `${apiUrl}/notices/${currentNotice.id}`
@@ -80,7 +80,7 @@ export default function NoticeSettings() {
         if (!confirm('Are you sure you want to delete this notice?')) return;
 
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('access_token');
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
             const res = await fetch(`${apiUrl}/notices/${id}`, {
                 method: 'DELETE',
