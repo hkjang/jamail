@@ -116,6 +116,35 @@
 *   **빌더에서**: 프런트엔드가 현재 스키마 상태에서 *생성된* HTML을 보내거나, 백엔드가 생성합니다.
 *   **코드 에디터에서**: 프런트엔드가 원본 HTML 문자열을 보냅니다.
 
+---
+
+## 4. 이메일 발송 (Sending Emails)
+
+이메일 발송을 위한 API는 두 템플릿 유형 모두 **동일**하지만, 내부 렌더링 프로세스에는 차이가 있습니다.
+
+### API 엔드포인트 (API Endpoint)
+**POST** `/api/templates/:id/send`
+
+### 요청 본문 (Request Body)
+```json
+{
+  "recipient": "user@example.com",
+  "variables": {
+    "name": "홍길동",
+    "orderId": "12345"
+  }
+}
+```
+
+### 내부 렌더링 프로세스 (Internal Rendering Process)
+
+| 템플릿 유형 | 프로세스 |
+| :--- | :--- |
+| **빌더 템플릿** | 1. **Schema to HTML**: 백엔드가 내부 렌더러를 사용하여 JSON `schema`를 HTML 문자열로 변환합니다.<br>2. **변수 치환**: 생성된 HTML 내의 Handlebars 변수(예: `{{name}}`)를 치환합니다. |
+| **기본 템플릿** | 1. **직접 사용**: 저장된 `htmlContent`를 그대로 사용합니다.<br>2. **변수 치환**: HTML 내의 Handlebars 변수를 치환합니다. |
+
+> **중요**: 발송하기 전에 반드시 템플릿의 **버전(Version)**을 생성해야 합니다. 발송 API는 템플릿의 `currentVersionId`를 사용합니다.
+
 ## 요약 (Summary)
 
 *   사용 편의성과 일관된 디자인을 위해서는 **빌더 템플릿** (`schema`)을 사용하세요.

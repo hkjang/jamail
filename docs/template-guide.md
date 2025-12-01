@@ -116,6 +116,35 @@ The preview endpoint works for both, but the input differs slightly in origin:
 *   **From Builder**: The frontend typically sends the *generated* HTML from the current schema state, or the backend generates it.
 *   **From Code Editor**: The frontend sends the raw HTML string.
 
+---
+
+## 4. Sending Emails
+
+The API for sending emails is **identical** for both template types, but the internal rendering process differs.
+
+### API Endpoint
+**POST** `/api/templates/:id/send`
+
+### Request Body
+```json
+{
+  "recipient": "user@example.com",
+  "variables": {
+    "name": "John Doe",
+    "orderId": "12345"
+  }
+}
+```
+
+### Internal Rendering Process
+
+| Template Type | Process |
+| :--- | :--- |
+| **Builder Template** | 1. **Schema to HTML**: The backend converts the JSON `schema` into an HTML string using the internal renderer.<br>2. **Variable Substitution**: Handlebars variables (e.g., `{{name}}`) are replaced in the generated HTML. |
+| **Basic Template** | 1. **Direct Use**: The stored `htmlContent` is used directly.<br>2. **Variable Substitution**: Handlebars variables are replaced in the HTML. |
+
+> **Important**: Ensure that you have created a **Version** of the template before sending. The send API uses the `currentVersionId` of the template.
+
 ## Summary
 
 *   Use **Builder Templates** (`schema`) for ease of use and consistent design.
