@@ -15,11 +15,12 @@ export class RolesGuard implements CanActivate {
         if (!requiredRoles) {
             return true;
         }
-        const { user } = context.switchToHttp().getRequest();
-        // If using API Key, we might map scopes to roles or bypass. 
-        // For now, let's assume 'user' object is populated by AuthGuard (JWT or ApiKey).
-        // If ApiKey is used, we might need a way to determine role.
-        // Let's assume ApiKey has full access for now or map it later.
+        const { user, apiKey } = context.switchToHttp().getRequest();
+
+        // If API Key is used, bypass role check (API Key uses Scopes instead)
+        if (apiKey) {
+            return true;
+        }
 
         if (!user) return false; // No user attached
 

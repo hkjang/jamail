@@ -4,6 +4,93 @@ const api = axios.create({
     baseURL: 'http://localhost:3001',
 });
 
+// Request interceptor to add auth token
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
+// Response interceptor to handle 401
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            // Only redirect if not already on login page to avoid loops
+            if (!window.location.pathname.includes('/auth/login')) {
+                // We can't use router here easily, so we might need to dispatch an event
+                // or let the UI handle the error.
+                // For now, let's just clear the token
+                localStorage.removeItem('access_token');
+                // window.location.href = '/auth/login'; // Optional: force redirect
+            }
+        }
+        return Promise.reject(error);
+    }
+);
+
+// Auth APIs
+export const login = async (data: any) => {
+    const { data: res } = await api.post('/auth/login', data);
+    if (res.access_token) {
+        localStorage.setItem('access_token', res.access_token);
+    }
+    return res;
+};
+
+export const logout = () => {
+    localStorage.removeItem('access_token');
+};
+
+export const getCurrentUser = async () => {
+    const { data } = await api.get('/auth/me');
+    return data;
+};
+
+// User Management APIs
+export const fetchUsers = async () => {
+    const { data } = await api.get('/auth/users');
+    return data;
+};
+
+export const createUser = async (data: any) => {
+    const { data: res } = await api.post('/auth/register', data);
+    return res;
+};
+
+export const updateUser = async (id: string, data: any) => {
+    const { data: res } = await api.patch(`/auth/users/${id}`, data);
+    return res;
+};
+
+export const deleteUser = async (id: string) => {
+    const { data } = await api.delete(`/auth/users/${id}`);
+    return data;
+};
+
+// API Key Management APIs
+export const fetchApiKeys = async () => {
+    const { data } = await api.get('/auth/api-keys');
+    return data;
+};
+
+export const createApiKey = async (data: any) => {
+    const { data: res } = await api.post('/auth/api-keys', data);
+    return res;
+};
+
+export const updateApiKey = async (id: string, data: any) => {
+    const { data: res } = await api.patch(`/auth/api-keys/${id}`, data);
+    return res;
+};
+
+export const deleteApiKey = async (id: string) => {
+    const { data } = await api.delete(`/auth/api-keys/${id}`);
+    return data;
+};
+
 // Template APIs
 export const fetchTemplates = async () => {
     const { data } = await api.get('/templates');
