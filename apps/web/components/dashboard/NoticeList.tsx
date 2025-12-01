@@ -23,7 +23,7 @@ export default function NoticeList() {
     const fetchNotices = async (page: number) => {
         setIsLoading(true);
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const apiUrl = '/api';
             const res = await fetch(`${apiUrl}/notices?page=${page}&limit=5`);
             if (res.ok) {
                 const data = await res.json();

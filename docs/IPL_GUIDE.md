@@ -26,7 +26,22 @@ docker compose build
 docker save -o jamail-images.tar jamail-web jamail-api postgres:15-alpine redis:7-alpine
 ```
 
-### 2.2 Docker 이미지 반입 (폐쇄망)
+### 2.2 환경 변수 설정 (필수)
+`docker-compose.yml`과 같은 경로에 `.env` 파일을 생성하여 환경 변수를 설정합니다.
+`.env.example` 파일을 복사하여 사용하면 편리합니다.
+
+```bash
+cp .env.example .env
+# vi .env 또는 메모장으로 환경에 맞게 수정
+```
+
+**주요 설정 항목:**
+- `POSTGRES_USER`, `POSTGRES_PASSWORD`: DB 접속 정보
+- `JWT_SECRET`: 보안 키 (반드시 변경 필요)
+- `CORS_ORIGIN`: Frontend URL (CORS 허용 도메인, 예: `http://localhost:3000`)
+- `API_URL`: Frontend가 Backend와 통신하기 위한 URL (Docker 내부 통신이므로 `http://api:3001` 권장)
+
+### 2.3 Docker 이미지 반입 (폐쇄망)
 저장된 `jamail-images.tar` 파일을 운영 서버로 전송한 후 로드합니다.
 
 ```bash

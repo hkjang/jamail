@@ -2,9 +2,9 @@ services:
   postgres:
     image: postgres:15-alpine
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-jamail}
+      POSTGRES_USER: ${POSTGRES_USER:-jamail}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-jamailpassword}
+      POSTGRES_DB: ${POSTGRES_DB:-jamail_db}
     ports:
       - "5432:5432"
     volumes:
@@ -15,7 +15,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     networks:
@@ -26,13 +26,14 @@ services:
       context: .
       dockerfile: apps/api/Dockerfile
     environment:
-      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-jamail}
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      # Add other necessary environment variables here
-      PORT: 3001
+      DATABASE_URL: postgres://${POSTGRES_USER:-jamail}:${POSTGRES_PASSWORD:-jamailpassword}@postgres:5432/${POSTGRES_DB:-jamail_db}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-this-in-production}
+      PORT: ${PORT:-3001}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
     ports:
-      - "3001:3001"
+      - "${PORT:-3001}:3001"
     depends_on:
       - postgres
       - redis
@@ -44,8 +45,7 @@ services:
       context: .
       dockerfile: apps/web/Dockerfile
     environment:
-      # This URL is used by the Next.js server to talk to the API
-      API_URL: http://api:3001
+      API_URL: ${API_URL:-http://api:3001}
     ports:
       - "3000:3000"
     depends_on:

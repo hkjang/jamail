@@ -22,7 +22,7 @@ export default function NoticeSettings() {
 
     const fetchNotices = async () => {
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const apiUrl = '/api';
             const res = await fetch(`${apiUrl}/notices?limit=100`);
             if (res.ok) {
                 const data = await res.json();
@@ -43,7 +43,7 @@ export default function NoticeSettings() {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('access_token');
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const apiUrl = '/api';
             const url = currentNotice.id
                 ? `${apiUrl}/notices/${currentNotice.id}`
                 : `${apiUrl}/notices`;
@@ -81,7 +81,7 @@ export default function NoticeSettings() {
 
         try {
             const token = localStorage.getItem('access_token');
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+            const apiUrl = '/api';
             const res = await fetch(`${apiUrl}/notices/${id}`, {
                 method: 'DELETE',
                 headers: {
